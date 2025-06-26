@@ -1,0 +1,39 @@
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mi_base
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./backend/init2.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    volumes:
+      - ./backend:/app
+    command: sh -c "npm install && node app.js"
+     # frontend:        # Opcional: descomentá si ya tenés Angular
+  #   build: ./frontend
+  #   container_name: frontend
+  #   ports:
+  #     - '4200:4200'
+  #   depends_on:
+  #     - backend
+  #   volumes:
+  #     - ./frontend:/app
+  #   command: sh -c "npm install && ng serve --host 0.0.0.0"
+
+volumes:
+  mysql-data:
