@@ -1,36 +1,33 @@
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const cookieParser = require('cookie-parser');
 
-function register(req, res) {
-  User.register(req.body, (err, data) => {
-    if (err) return res.status(400).send(err);
-    res.send({ mensaje: 'Usuario registrado' });
-  });
-}
+async function login(req, res, next) {
+  const {cedula, password } = req.body;
+  
+  const user = await User.findUser(cedula);
+  const passIsValid = bcrypt.compare(password, user.password)
+  if  (!passIsValid) {
+    return res.status(401).send({ error: 'Credenciales inválidas' });
+  }
+  if (user.error) {
+    return res.status(401).send({ error: user.error });
+  }
+  const token = jwt.sign(
+    { cedula: user.cedula, user: user },
+    process.env.JWT_SECRET,
+    { expiresIn: '1d' }
+  );
 
-function login(req, res) {
-  const { email, password } = req.body;
-  User.login(email, password, (err, user) => {
-    if (err) return res.status(401).send(err);
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    res.send({
-      token,
-      user: {
-        id: user.id,
-        nombre: user.nombre,
-        email: user.email
-      }
+  // only localhost
+  res.cookie('token', token, {
+    httpOnly: false,
+    secure: false, // Set to true if using HTTPS
     });
-  });
 }
 
 module.exports = {
-  register,
   login
 };

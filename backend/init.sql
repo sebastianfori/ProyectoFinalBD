@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS Votante (
     Nombre VARCHAR(50),
     Apellido VARCHAR(50),
     Fecha_Nacimiento DATE,
-    Direccion VARCHAR(100),
     Numero INT,
     Serie VARCHAR(50),
     Ya_Voto BOOLEAN,
@@ -66,6 +65,11 @@ CREATE TABLE IF NOT EXISTS MiembroMesa (
   FOREIGN KEY (Numero_Circuito) REFERENCES Circuito(Numero_Circuito)
 );
 
+CREATE TABLE IF NOT EXIST Observado (
+  CedulaVotante VARCHAR(20),
+  PRIMARY KEY (CedulaVotante),
+  FOREIGN KEY (CedulaVotante) REFERENCES Votante(Cedula)
+);
 -- Crear tabla Comisaria
 CREATE TABLE IF NOT EXISTS Comisaria (
     Nro_Comisaria INT PRIMARY KEY,
