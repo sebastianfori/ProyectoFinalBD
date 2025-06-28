@@ -5,6 +5,6 @@ const authMiddleware = require('../middlewares/auth.middleware');
 const authorizationMiddleware = require('../middlewares/authorization.middleware');
 router.get('/view', authMiddleware, authorizationMiddleware.authorize('miembro_mesa'),  presidenteController.view);
 router.post('/actualizar-estado-mesa',authMiddleware,authorizationMiddleware.authorize('miembro_mesa'), presidenteController.actualizarEstadoMesa);
-router
-
+router.post('/habilitar-votante', authMiddleware, authorizationMiddleware.authorize('miembro_mesa'), presidenteController.habilitarVotante);
+router.post('/observar-voto', authMiddleware, authorizationMiddleware.authorize('miembro_mesa'), presidenteController.observarVoto);
 module.exports = router;

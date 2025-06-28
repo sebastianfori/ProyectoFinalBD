@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS Votante (
     Numero INT,
     Serie VARCHAR(50),
     Ya_Voto BOOLEAN,
+    HabilitadoVotarPresidenteMesa BOOLEAN,
     Numero_Circuito INT,
     password VARCHAR(255),
     FOREIGN KEY (Direccion) REFERENCES Direccion(Direccion),
@@ -81,8 +82,10 @@ CREATE TABLE IF NOT EXISTS Comisaria (
 CREATE TABLE IF NOT EXISTS PartidoPolitico (
   ID_Partido INT PRIMARY KEY AUTO_INCREMENT,
   NombrePartido VARCHAR(100),
-  Presidente VARCHAR(50),
-  Vicepresidente VARCHAR(50)
+  ID_Presidente int,
+  ID_Vicepresidente int,
+  FOREIGN KEY (ID_Presidente) REFERENCES Candidato(ID_Candidato),
+  FOREIGN KEY (ID_Vicepresidente) REFERENCES Candidato(ID_Candidato)
 );
 
 -- Crear tabla Lista
@@ -113,8 +116,10 @@ CREATE TABLE IF NOT EXISTS Integra (
 CREATE TABLE IF NOT EXISTS Voto (
   ID_Voto INT PRIMARY KEY AUTO_INCREMENT,
   Observado BOOLEAN,
+  En_Blanco BOOLEAN,
   anulado BOOLEAN,
   Numero_Circuito INT,
+  ID_Lista INT,
   FOREIGN KEY (Numero_Circuito) REFERENCES Circuito(Numero_Circuito)
   FOREIGN KEY (ID_Lista) REFERENCES Lista(ID_Lista)
 );
