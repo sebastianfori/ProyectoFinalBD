@@ -42,7 +42,6 @@ CREATE TABLE IF NOT EXISTS Votante (
     HabilitadoVotarPresidenteMesa BOOLEAN,
     Numero_Circuito INT,
     password VARCHAR(255),
-    FOREIGN KEY (Direccion) REFERENCES Direccion(Direccion),
     FOREIGN KEY (Numero_Circuito) REFERENCES Circuito(Numero_Circuito)
 );
 
@@ -66,17 +65,19 @@ CREATE TABLE IF NOT EXISTS MiembroMesa (
   FOREIGN KEY (Numero_Circuito) REFERENCES Circuito(Numero_Circuito)
 );
 
-CREATE TABLE IF NOT EXIST Observado (
-  CedulaVotante VARCHAR(20),
-  PRIMARY KEY (CedulaVotante),
-  FOREIGN KEY (CedulaVotante) REFERENCES Votante(Cedula)
-);
 -- Crear tabla Comisaria
 CREATE TABLE IF NOT EXISTS Comisaria (
     Nro_Comisaria INT PRIMARY KEY,
     Direccion VARCHAR(100),
     FOREIGN KEY (Direccion) REFERENCES Direccion(Direccion)
 );
+-- Crear tabla Candidato
+CREATE TABLE IF NOT EXISTS Candidato (
+  ID_Candidato INT PRIMARY KEY AUTO_INCREMENT,
+  Nombre VARCHAR(50),
+  Apellido VARCHAR(50)
+);
+
 
 -- Crear tabla PartidoPolitico
 CREATE TABLE IF NOT EXISTS PartidoPolitico (
@@ -96,12 +97,6 @@ CREATE TABLE IF NOT EXISTS Lista (
   FOREIGN KEY (ID_Partido) REFERENCES PartidoPolitico(ID_Partido)
 );
 
--- Crear tabla Candidato
-CREATE TABLE IF NOT EXISTS Candidato (
-  ID_Candidato INT PRIMARY KEY AUTO_INCREMENT,
-  Nombre VARCHAR(50),
-  Apellido VARCHAR(50)
-);
 
 -- Crear tabla Integra
 CREATE TABLE IF NOT EXISTS Integra (
@@ -112,7 +107,6 @@ CREATE TABLE IF NOT EXISTS Integra (
   FOREIGN KEY (ID_Lista) REFERENCES Lista(ID_Lista)
 );
 
--- Crear tabla Voto
 CREATE TABLE IF NOT EXISTS Voto (
   ID_Voto INT PRIMARY KEY AUTO_INCREMENT,
   Observado BOOLEAN,
@@ -120,6 +114,81 @@ CREATE TABLE IF NOT EXISTS Voto (
   anulado BOOLEAN,
   Numero_Circuito INT,
   ID_Lista INT,
-  FOREIGN KEY (Numero_Circuito) REFERENCES Circuito(Numero_Circuito)
+  FOREIGN KEY (Numero_Circuito) REFERENCES Circuito(Numero_Circuito),
   FOREIGN KEY (ID_Lista) REFERENCES Lista(ID_Lista)
 );
+
+
+-- 1. Departamento
+INSERT INTO Departamento (Nombre) VALUES
+('Montevideo'),
+('Canelones');
+
+-- 2. Direcciones
+INSERT INTO Direccion (Direccion, Codigo_Postal, Nombre_Departamento) VALUES
+('Av. Italia 1234', '11500', 'Montevideo'),
+('Ruta 8 km 29', '90000', 'Canelones');
+
+-- 3. Establecimientos
+INSERT INTO Establecimiento (Direccion) VALUES
+('Av. Italia 1234'),
+('Ruta 8 km 29');
+
+-- 4. Circuitos
+INSERT INTO Circuito (Numero_Circuito, EsAccesible, EstaAbierto, Circuito_Serie, Numero_Inicio, Numero_Fin, ID_Establecimiento) VALUES
+(101, TRUE, TRUE, 'A', 1, 100, 1),
+(102, TRUE, FALSE, 'B', 101, 200, 2);
+
+-- 5. Candidatos (10 candidatos: 5 presidentes + 5 vices)
+INSERT INTO Candidato (Nombre, Apellido) VALUES
+('Juan', 'Pérez'),       -- ID 1
+('María', 'García'),     -- ID 2
+('Luis', 'Rodríguez'),   -- ID 3
+('Ana', 'López'),        -- ID 4
+('Pablo', 'Fernández'),  -- ID 5
+('Laura', 'Martínez'),   -- ID 6
+('Carlos', 'Suárez'),    -- ID 7
+('Sofía', 'Ruiz'),       -- ID 8
+('Federico', 'Santos'),  -- ID 9
+('Valeria', 'Morales');  -- ID 10
+
+-- 6. Partidos (5 partidos con presidente y vice)
+INSERT INTO PartidoPolitico (NombrePartido, ID_Presidente, ID_Vicepresidente) VALUES
+('Partido Azul', 1, 2),
+('Partido Verde', 3, 4),
+('Partido Amarillo', 5, 6),
+('Partido Rojo', 7, 8),
+('Partido Violeta', 9, 10);
+
+-- 7. Listas (una por partido)
+INSERT INTO Lista (Numero_Lista, ID_Partido) VALUES
+(100, 1),
+(200, 2),
+(300, 3),
+(400, 4),
+(500, 5);
+
+-- 8. Integra (opcional: asociar presidentes y vices a sus listas)
+INSERT INTO Integra (ID_Candidato, ID_Lista) VALUES
+(1, 1), (2, 1),
+(3, 2), (4, 2),
+(5, 3), (6, 3),
+(7, 4), (8, 4),
+(9, 5), (10, 5);
+-- Insertar 2 votantes en distintos circuitos
+INSERT INTO Votante (Cedula, Nombre, Apellido, Fecha_Nacimiento, Numero, Serie, Ya_Voto, HabilitadoVotarPresidenteMesa, Numero_Circuito, password)
+VALUES
+('11111111', 'Pedro', 'Ramírez', '1995-04-10', 45, 'A', FALSE, TRUE, 101, '$2a$10$0abS/XKtb0LVglSPaBS/6.F2PES6ckVKBIwDAtAvFTEXZdv0jRfWa'),
+('22222222', 'Lucía', 'Torres', '2000-08-22', 150, 'B', FALSE, TRUE, 102, '$2a$10$0abS/XKtb0LVglSPaBS/6.F2PES6ckVKBIwDAtAvFTEXZdv0jRfWa');
+
+-- Insertar 2 miembros de mesa (tipo presidente)
+INSERT INTO Votante (Cedula, Nombre, Apellido, Fecha_Nacimiento, Numero, Serie, Ya_Voto, HabilitadoVotarPresidenteMesa, Numero_Circuito, password)
+VALUES
+('33333333', 'Jorge', 'Martín', '1980-02-14', 25, 'A', FALSE, TRUE, 101, '$2a$10$0abS/XKtb0LVglSPaBS/6.F2PES6ckVKBIwDAtAvFTEXZdv0jRfWa'),
+('44444444', 'Valeria', 'Muñoz', '1985-11-09', 175, 'B', FALSE, TRUE, 102, '$2a$10$0abS/XKtb0LVglSPaBS/6.F2PES6ckVKBIwDAtAvFTEXZdv0jRfWa');
+
+-- Asociarlos como miembros de mesa
+INSERT INTO MiembroMesa (CedulaVotante, Tipo_Miembro, Numero_Circuito)
+VALUES
+('33333333', 'Presidente', 101),
+('44444444', 'Presidente', 102);

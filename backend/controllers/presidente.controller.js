@@ -3,6 +3,7 @@
 //y permitir abrirlo despues de la hora pautada y tambien permitit cerralo despues de la hora pautada
 const db = require('../config/db.config');
 const circuitoModel = require('../models/circuito.model');
+userModel = require('../models/user.model');
 
 async function actualizarEstadoMesa(req, res) {
     const { user } = req;
@@ -35,7 +36,39 @@ function validarEstado(estado) {
         throw new Error('No se puede cerrar el circuito después de las 8:00 PM');
     }   
 }
+function view(req, res) {
+  res.send("Vista del presidente");
+}
+
+function habilitarVotante(req, res) {
+ res.send("Vista del presidente");
+}
+
+function observarVoto(req, res) {
+  res.send("Vista del presidente");
+}
 
 module.exports = {
-    actualizarEstadoMesa
+  view,
+  actualizarEstadoMesa,
+  habilitarVotante,
+  observarVoto,
 };
+// async function buscarVotantePorCedula(cedula) {
+
+// async function habilitarVotante(req, res) {
+//     const { user } = req;
+//     const cedula = req.body.cedula;
+//     const circuito = user.miembro.Numero_Circuito;
+//     // Validar que la cédula sea un número válido
+//     if (!cedula || isNaN(cedula)) {
+//         return res.status(400).send({ error: 'Cédula inválida.' });
+//     }
+//     // Validar que la hora actual sea válida para habilitar al votante
+//     const horaActual = new Date();
+//     const horaApertura = new Date(horaActual.getFullYear(), horaActual.getMonth(), horaActual.getDate(), 8, 0, 0);
+//     if (horaActual < horaApertura) {
+//         return res.status(400).send({ error: 'No se puede habilitar al votante antes de las 8:00 AM.' });
+//     }
+//     // Llamar al modelo para habilitar al votante
+    

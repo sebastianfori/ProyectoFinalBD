@@ -45,52 +45,54 @@ export class VistaVotanteComponent implements OnInit {
 
   cargarPapeletas() {
     // Datos de ejemplo -agregar srervio despues
-    this.papeletas = [
-      {
-        id: 1,
-        numeroLista: 15,
-        partido: 'Partido Colorado',
-        color: '#FF6B6B',
-        tipo: 'lista',
-        candidatos: [
-          { id: 1, nombre: 'Juan Pérez', cargo: 'Intendente' },
-          { id: 2, nombre: 'María González', cargo: 'Edil Titular' },
-          { id: 3, nombre: 'Carlos López', cargo: 'Edil Suplente' }
-        ]
-      },
-      {
-        id: 2,
-        numeroLista: 25,
-        partido: 'Partido Nacional',
-        color: '#4ECDC4',
-        tipo: 'lista',
-        candidatos: [
-          { id: 4, nombre: 'Ana Martínez', cargo: 'Intendente' },
-          { id: 5, nombre: 'Roberto Silva', cargo: 'Edil Titular' },
-          { id: 6, nombre: 'Laura Rodríguez', cargo: 'Edil Suplente' }
-        ]
-      },
-      {
-        id: 3,
-        numeroLista: 35,
-        partido: 'Frente Amplio',
-        color: '#45B7D1',
-        tipo: 'lista',
-        candidatos: [
-          { id: 7, nombre: 'Diego Fernández', cargo: 'Intendente' },
-          { id: 8, nombre: 'Patricia Morales', cargo: 'Edil Titular' },
-          { id: 9, nombre: 'Andrés Castro', cargo: 'Edil Suplente' }
-        ]
-      },
-      {
-        id: 4,
-        numeroLista: 999,
-        partido: 'Voto en Blanco',
-        color: '#E8E8E8',
-        tipo: 'blanco',
-        candidatos: []
-      }
-    ];
+
+    
+    // this.papeletas = [
+    //   {
+    //     id: 1,
+    //     numeroLista: 15,
+    //     partido: 'Partido Colorado',
+    //     color: '#FF6B6B',
+    //     tipo: 'lista',
+    //     candidatos: [
+    //       { id: 1, nombre: 'Juan Pérez', cargo: 'Intendente' },
+    //       { id: 2, nombre: 'María González', cargo: 'Edil Titular' },
+    //       { id: 3, nombre: 'Carlos López', cargo: 'Edil Suplente' }
+    //     ]
+    //   },
+    //   {
+    //     id: 2,
+    //     numeroLista: 25,
+    //     partido: 'Partido Nacional',
+    //     color: '#4ECDC4',
+    //     tipo: 'lista',
+    //     candidatos: [
+    //       { id: 4, nombre: 'Ana Martínez', cargo: 'Intendente' },
+    //       { id: 5, nombre: 'Roberto Silva', cargo: 'Edil Titular' },
+    //       { id: 6, nombre: 'Laura Rodríguez', cargo: 'Edil Suplente' }
+    //     ]
+    //   },
+    //   {
+    //     id: 3,
+    //     numeroLista: 35,
+    //     partido: 'Frente Amplio',
+    //     color: '#45B7D1',
+    //     tipo: 'lista',
+    //     candidatos: [
+    //       { id: 7, nombre: 'Diego Fernández', cargo: 'Intendente' },
+    //       { id: 8, nombre: 'Patricia Morales', cargo: 'Edil Titular' },
+    //       { id: 9, nombre: 'Andrés Castro', cargo: 'Edil Suplente' }
+    //     ]
+    //   },
+    //   {
+    //     id: 4,
+    //     numeroLista: 999,
+    //     partido: 'Voto en Blanco',
+    //     color: '#E8E8E8',
+    //     tipo: 'blanco',
+    //     candidatos: []
+    //   }
+    // ];
   }
 
   seleccionarPapeleta(papeletaId: number) {

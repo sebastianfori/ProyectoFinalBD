@@ -33,21 +33,36 @@
         </div>
     </nav>
 
-    <!-- LOGIN SECTION -->
-    <div class="login-wrapper">
-        <div class="login-card">
-            <h2>Iniciar sesión</h2>
-            <form id="loginForm">
-                <label for="username">Usuario</label>
-                <input id="username" name="username" type="text" placeholder="Tu usuario" required />
+<!-- LOGIN SECTION -->
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Iniciar sesión</h2>
 
-                <label for="password">Contraseña</label>
-                <input id="password" name="password" type="password" placeholder="Tu contraseña" required />
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <label for="username">Usuario</label>
+      <input
+        id="username"
+        type="text"
+        formControlName="username"
+        placeholder="Tu usuario"
+      />
 
-                <button type="submit">Ingresar</button>
-            </form>
-        </div>
+      <label for="password">Contraseña</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="Tu contraseña"
+      />
+
+      <button type="submit">Ingresar</button>
+    </form>
+
+    <div *ngIf="error" class="error">
+      {{ error }}
     </div>
+  </div>
+</div>
 
     <!-- FOOTER -->
     <footer class="footer-uruguayo">

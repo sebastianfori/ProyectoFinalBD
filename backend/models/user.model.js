@@ -6,14 +6,11 @@ const bcrypt = require('bcryptjs');
 async function findUser(cedula) {
   const connection = await mysql.createConnection(dbConfig);
 
-
-
-  // 2. Buscar si es votante
   const [votantes] = await connection.execute(
     'SELECT * FROM votantes WHERE Cedula = ?',
     [cedula]
   );
-  
+
   if (votantes.length === 0) {
     await connection.end();
     return { error: 'Credenciales inválidas' };
@@ -21,23 +18,38 @@ async function findUser(cedula) {
 
   const votante = votantes[0];
 
-
   const [miembros] = await connection.execute(
     'SELECT * FROM MiembroMesa WHERE Cedula = ?',
     [cedula]
   );
-  if (miembros.length > 0) {
-    return {miembro : miembros[0] , tipo: 'miembro_mesa', usuario: votante};
-  }
+
   await connection.end();
 
-  return { tipo: 'votante', usuario: votante };
+  if (miembros.length > 0) {
+    return { tipo: 'miembro_mesa', usuario: votante, password: votante.Password };
+  }
+
+  return { tipo: 'votante', usuario: votante, password: votante.Password };
+}
+
+
+async function habilitarVotante(cedula) {
+  const connection = await mysql.createConnection(dbConfig);
+  // 1. hacer el update del votante si existe
+  const [result] = await connection.execute(
+    'UPDATE Votante SET HabilitadoVotarPresidenteMesa = 1 WHERE Cedula = ?',
+    [cedula]
+  );
+  if (result.affectedRows === 0) {
+    await connection.end();
+    return { error: 'Votante no encontrado o ya habilitado' };
+  }
+  await connection.end();
+  return { message: 'Votante habilitado exitosamente' };
+}
 
 
 
-
-
-};  loginUsuariomodule.exports = {}
 
 module.exports = {
   findUser

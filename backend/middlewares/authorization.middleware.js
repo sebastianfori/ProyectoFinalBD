@@ -13,3 +13,6 @@ function authorize(role) {
     next();
     };
 }   
+module.exports = {
+  authorize,
+};
