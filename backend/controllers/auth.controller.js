@@ -1,18 +1,21 @@
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const cookie = require('cookie-parser');
 
 async function login(req, res) {
   const { cedula, password } = req.body;
+  console.log('Login attempt with cedula:', cedula);
+  console.log('Login attempt with password:', password);
 
   const user = await User.findUser(cedula);
 
   if (user.error) {
     return res.status(401).json({ error: user.error });
   }
+  console.log('User found:', user);
 
-  const passIsValid = await bcrypt.compare(password, user.password);
+  const passIsValid = await bcrypt.compare(password, user.usuario.password);
 
   if (!passIsValid) {
     return res.status(401).json({ error: 'Credenciales inválidas' });

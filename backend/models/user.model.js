@@ -1,13 +1,13 @@
 const mysql = require('mysql2/promise');
 const dbConfig = require('../config/db.config');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 
 async function findUser(cedula) {
   const connection = await mysql.createConnection(dbConfig);
 
   const [votantes] = await connection.execute(
-    'SELECT * FROM votantes WHERE Cedula = ?',
+    'SELECT * FROM Votante WHERE Cedula = ?',
     [cedula]
   );
 
@@ -19,13 +19,13 @@ async function findUser(cedula) {
   const votante = votantes[0];
 
   const [miembros] = await connection.execute(
-    'SELECT * FROM MiembroMesa WHERE Cedula = ?',
+    'SELECT * FROM MiembroMesa WHERE CedulaVotante = ?',
     [cedula]
   );
 
   await connection.end();
 
-  if (miembros.length > 0) {
+  if (miembros && miembros.length > 0) {
     return { tipo: 'miembro_mesa', usuario: votante, password: votante.Password };
   }
 
