@@ -52,4 +52,9 @@ export class PresidenteMesaComponent {
     this.mostrarConfirmacion = true;
   }
 
+  // método para navegar a votos observados
+  verVotosObservados() {
+    this.router.navigate(['/votosobservados']);
+  }
+
 }

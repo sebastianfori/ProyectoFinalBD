@@ -1,7 +1,12 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'inicio', pathMatch: 'full' }, //  home
+  {
+    path: 'inicio',
+    loadComponent: () =>
+      import('./vista-inicio/vista-inicio.component').then(m => m.VistaInicioComponent)
+  },
   {
     path: 'login',
     loadComponent: () =>
@@ -17,11 +22,16 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./vista-presidentemesa/vista-presidentemesa.component').then(m => m.PresidenteMesaComponent)
   },
-{
-  path: 'resultados',
-  loadComponent: () =>
-    import('./vista-resultados/vista-resultados.component').then(m => m.VistaResultadosComponent)
-},
-
-  { path: '**', redirectTo: 'login' }
+  {
+    path: 'resultados',
+    loadComponent: () =>
+      import('./vista-resultados/vista-resultados.component').then(m => m.VistaResultadosComponent)
+  },
+  {
+    path: 'votosobservados',
+    loadComponent: () =>
+      import('./vista-votosobservados/vista-votosobservados.component').then(m => m.VotosObservadosComponent)
+  },
+  { path: '**', redirectTo: 'inicio' } // 
 ];
+

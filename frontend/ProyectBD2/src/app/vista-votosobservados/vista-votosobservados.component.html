@@ -1,0 +1,26 @@
+<div class="votos-observados-container">
+  <h2>Votantes Observados Pendientes</h2>
+
+  <!-- 🔍 Buscador -->
+  <div class="buscador">
+    <input type="text" [(ngModel)]="filtroCedula" placeholder="Buscar por cédula">
+    <span class="lupa">🔍</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Cédula</th>
+        <th>Aprobar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let votante of votantesFiltrados">
+        <td>{{ votante.cedula }}</td>
+        <td>
+          <input type="checkbox" (change)="aprobarVotante(votante.id)">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

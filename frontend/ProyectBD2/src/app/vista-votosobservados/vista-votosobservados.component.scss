@@ -1,0 +1,55 @@
+.votos-observados-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .buscador {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 70%;
+      margin-right: 10px;
+    }
+
+    .lupa {
+      font-size: 1.5rem;
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.5);
+      cursor: pointer;
+    }
+  }
+}

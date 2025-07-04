@@ -1,0 +1,61 @@
+$primary-color: #2c3e50;
+$secondary-color: #3498db;
+$background-color: #f8f9fa;
+$shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+.inicio-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 50px 20px;
+  background-color: $background-color;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  .inicio-header {
+    margin-bottom: 40px;
+
+    h1 {
+      font-size: 2rem;
+      color: $primary-color;
+      text-align: center;
+    }
+  }
+
+  .inicio-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 300px;
+
+    button {
+      padding: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: $shadow;
+
+      &:first-child {
+        background: linear-gradient(135deg, $secondary-color 0%, #2980b9 100%);
+        color: white;
+      }
+
+      &:last-child {
+        background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+        color: white;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}
