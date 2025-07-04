@@ -12,15 +12,15 @@ async function view(req, res, next) {
         res.status(500).json({ error: 'Error al obtener las listas.' });
     }
 }
-// votar
-// async function votar(req, res, next) {
-//     const { idLista } = req.body; // ID de la lista seleccionada por el votante
-//     const { user } = req; // Información del usuario autenticado
-//     try {
-//         // Aquí deberías implementar la lógica para registrar el voto del usuario
+votar
+async function votar(req, res, next) {
+        console.log('Votando...');
+}
+        // Aquí deberías implementar la lógica para registrar el voto del usuario
 
         
 
 module.exports = {
-    view
+    view,
+    votar
 };  

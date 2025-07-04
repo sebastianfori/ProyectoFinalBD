@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PapeletasService } from '../papeletas.service'; // Asegurate de importar bien
 
 interface Candidato {
   id: number;
@@ -30,8 +31,7 @@ export class VistaVotanteComponent implements OnInit {
   votoConfirmado = false;
   mostrarConfirmacion = false;
   fechaActual = new Date();
-  
-  // Información del circuito
+
   circuito = {
     numero: 'A-001',
     establecimiento: 'Escuela No. 15',
@@ -39,60 +39,55 @@ export class VistaVotanteComponent implements OnInit {
     direccion: 'Av. 18 de Julio 1234'
   };
 
+  constructor(private votacionService: PapeletasService) {}
+
   ngOnInit() {
     this.cargarPapeletas();
   }
 
   cargarPapeletas() {
-    // Datos de ejemplo -agregar srervio despues
+    this.votacionService.obtenerListas().subscribe({
+      next: listas => {
+        console.log('Listas recibidas del backend:', listas);
+        this.papeletas = listas.map(lista => ({
+          id: lista.ID_Lista,
+          numeroLista: lista.Numero_Lista,
+          partido: lista.Partido,
+          color: this.generarColor(lista.ID_Lista), // opcional: genera un color por lista
+          tipo: 'lista',
+          candidatos: [
+            {
+              id: lista.Presidente.ID_Candidato,
+              nombre: `${lista.Presidente.Nombre} ${lista.Presidente.Apellido}`,
+              cargo: 'Presidente'
+            },
+            {
+              id: lista.Vicepresidente.ID_Candidato,
+              nombre: `${lista.Vicepresidente.Nombre} ${lista.Vicepresidente.Apellido}`,
+              cargo: 'Vicepresidente'
+            }
+          ]
+        }));
 
-    
-    // this.papeletas = [
-    //   {
-    //     id: 1,
-    //     numeroLista: 15,
-    //     partido: 'Partido Colorado',
-    //     color: '#FF6B6B',
-    //     tipo: 'lista',
-    //     candidatos: [
-    //       { id: 1, nombre: 'Juan Pérez', cargo: 'Intendente' },
-    //       { id: 2, nombre: 'María González', cargo: 'Edil Titular' },
-    //       { id: 3, nombre: 'Carlos López', cargo: 'Edil Suplente' }
-    //     ]
-    //   },
-    //   {
-    //     id: 2,
-    //     numeroLista: 25,
-    //     partido: 'Partido Nacional',
-    //     color: '#4ECDC4',
-    //     tipo: 'lista',
-    //     candidatos: [
-    //       { id: 4, nombre: 'Ana Martínez', cargo: 'Intendente' },
-    //       { id: 5, nombre: 'Roberto Silva', cargo: 'Edil Titular' },
-    //       { id: 6, nombre: 'Laura Rodríguez', cargo: 'Edil Suplente' }
-    //     ]
-    //   },
-    //   {
-    //     id: 3,
-    //     numeroLista: 35,
-    //     partido: 'Frente Amplio',
-    //     color: '#45B7D1',
-    //     tipo: 'lista',
-    //     candidatos: [
-    //       { id: 7, nombre: 'Diego Fernández', cargo: 'Intendente' },
-    //       { id: 8, nombre: 'Patricia Morales', cargo: 'Edil Titular' },
-    //       { id: 9, nombre: 'Andrés Castro', cargo: 'Edil Suplente' }
-    //     ]
-    //   },
-    //   {
-    //     id: 4,
-    //     numeroLista: 999,
-    //     partido: 'Voto en Blanco',
-    //     color: '#E8E8E8',
-    //     tipo: 'blanco',
-    //     candidatos: []
-    //   }
-    // ];
+        // Agregar voto en blanco al final
+        this.papeletas.push({
+          id: 999,
+          numeroLista: 999,
+          partido: 'Voto en Blanco',
+          color: '#CCCCCC',
+          tipo: 'blanco',
+          candidatos: []
+        });
+      },
+      error: err => {
+        console.error('Error al cargar papeletas:', err);
+      }
+    });
+  }
+
+  generarColor(id: number): string {
+    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFD166'];
+    return colors[id % colors.length];
   }
 
   seleccionarPapeleta(papeletaId: number) {
@@ -109,13 +104,10 @@ export class VistaVotanteComponent implements OnInit {
   }
 
   efectuarVoto() {
-    // lógica para enviar el voto al backend
     console.log('Voto efectuado para papeleta ID:', this.papeletaSeleccionada);
-    
     this.votoConfirmado = true;
     this.mostrarConfirmacion = false;
-    
-    // Simular envío al servidor
+
     setTimeout(() => {
       alert('¡Su voto ha sido registrado correctamente!');
     }, 1000);

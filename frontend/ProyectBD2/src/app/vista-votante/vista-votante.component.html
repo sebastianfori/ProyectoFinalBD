@@ -1,10 +1,10 @@
 <div class="voting-container">
-  <!-- Header con información del circuito -->
+  <!-- Header -->
   <div class="voting-header">
     <div class="escudo-nacional">
       <div class="escudo-placeholder">🇺🇾</div>
     </div>
-    <h1>ELECCIONES MUNICIPALES 2025</h1>
+    <h1>ELECCIONES PRESIDENCIALES 2025</h1>
     <div class="circuito-info">
       <h2>Circuito {{ circuito.numero }}</h2>
       <p>{{ circuito.establecimiento }}</p>
@@ -14,19 +14,18 @@
 
   <!-- Instrucciones -->
   <div class="instrucciones" *ngIf="!votoConfirmado">
-    <h3>📋 Instrucciones para votar:</h3>
+    <h3>📋 Instrucciones:</h3>
     <ul>
-      <li>Seleccione una papeleta haciendo clic en el checkbox correspondiente</li>
-      <li>Revise su selección cuidadosamente</li>
-      <li>Presione el botón "Confirmar Voto" para proceder</li>
-      <li>Su voto es secreto y será registrado de forma anónima</li>
+      <li>Seleccione una papeleta haciendo clic.</li>
+      <li>Presione "Confirmar Voto" para enviar su elección.</li>
+      <li>Su voto es secreto y seguro.</li>
     </ul>
   </div>
 
-  <!-- Papeletas de votación -->
+  <!-- Papeletas -->
   <div class="papeletas-container" *ngIf="!votoConfirmado">
     <h3>Seleccione su opción de voto:</h3>
-    
+
     <div class="papeletas-grid">
       <div 
         *ngFor="let papeleta of papeletas" 
@@ -34,7 +33,7 @@
         [class.selected]="papeletaSeleccionada === papeleta.id"
         [style.border-left-color]="papeleta.color"
         (click)="seleccionarPapeleta(papeleta.id)">
-        
+
         <div class="papeleta-header">
           <input 
             type="radio" 
@@ -43,7 +42,7 @@
             [id]="'papeleta-' + papeleta.id"
             name="papeleta">
           <label [for]="'papeleta-' + papeleta.id" class="checkbox-label"></label>
-          
+
           <div class="numero-lista" *ngIf="papeleta.tipo === 'lista'">
             {{ papeleta.numeroLista }}
           </div>
@@ -53,15 +52,15 @@
           <h4>{{ papeleta.partido }}</h4>
         </div>
 
+        <!-- Mostrar candidatos -->
         <div class="candidatos-lista" *ngIf="papeleta.candidatos.length > 0">
-          <div 
-            *ngFor="let candidato of papeleta.candidatos" 
-            class="candidato-item">
+          <div *ngFor="let candidato of papeleta.candidatos" class="candidato-item">
             <span class="candidato-cargo">{{ candidato.cargo }}:</span>
             <span class="candidato-nombre">{{ candidato.nombre }}</span>
           </div>
         </div>
 
+        <!-- Voto blanco -->
         <div class="voto-especial" *ngIf="papeleta.tipo === 'blanco'">
           <p>✓ Voto en blanco</p>
           <p class="descripcion">No selecciona ningún candidato</p>
@@ -69,7 +68,7 @@
       </div>
     </div>
 
-    <!-- Botón de confirmación -->
+    <!-- Botón confirmar -->
     <div class="accion-buttons">
       <button 
         class="btn-confirmar"
@@ -80,11 +79,11 @@
     </div>
   </div>
 
-  <!-- Modal de confirmación -->
+  <!-- Modal confirmación -->
   <div class="modal-overlay" *ngIf="mostrarConfirmacion">
     <div class="modal-confirmacion">
       <h3>🗳️ Confirmar su voto</h3>
-      
+
       <div class="voto-resumen" *ngIf="getPapeletaSeleccionada() as papeleta">
         <p><strong>Ha seleccionado:</strong></p>
         <div class="papeleta-confirmacion" [style.border-left-color]="papeleta.color">
@@ -97,175 +96,34 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="advertencia">
-        <p>⚠️ <strong>ATENCIÓN:</strong> Una vez confirmado, no podrá cambiar su voto.</p>
-        <p>¿Está seguro de que desea proceder?</p>
-      </div>
-
-      <div class="modal-buttons">
-        <button class="btn-cancelar" (click)="cancelarVoto()">
-          Cancelar
-        </button>
-        <button class="btn-efectuar" (click)="efectuarVoto()">
-          Efectuar Voto
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Confirmación de voto realizado -->
-  <div class="voto-realizado" *ngIf="votoConfirmado">
-    <div class="success-icon">✅</div>
-    <h2>¡Voto registrado correctamente!</h2>
-    <p>Su voto ha sido registrado de forma anónima y segura.</p>
-    <p>Gracias por participar en el proceso democrático.</p>
-    
-    <div class="info-adicional">
-      <p><strong>Circuito:</strong> {{ circuito.numero }}</p>
-      <p><strong>Fecha y hora:</strong> {{ fechaActual | date:'dd/MM/yyyy HH:mm' }}</p>
-    </div>
-
-    <!-- Botón para reiniciar (solo para testing) -->
-    <button class="btn-reiniciar" (click)="reiniciarVoto()">
-      Simular Nuevo Voto (Solo para pruebas)
-    </button>
-  </div>
-</div><div class="voting-container">
-  <!-- Header con información del circuito -->
-  <div class="voting-header">
-    <div class="escudo-nacional">
-      <div class="escudo-placeholder">🇺🇾</div>
-    </div>
-    <h1>ELECCIONES MUNICIPALES 2025</h1>
-    <div class="circuito-info">
-      <h2>Circuito {{ circuito.numero }}</h2>
-      <p>{{ circuito.establecimiento }}</p>
-      <p>{{ circuito.direccion }} - {{ circuito.departamento }}</p>
-    </div>
-  </div>
-
-  <!-- Instrucciones -->
-  <div class="instrucciones" *ngIf="!votoConfirmado">
-    <h3>📋 Instrucciones para votar:</h3>
-    <ul>
-      <li>Seleccione una papeleta haciendo clic en el checkbox correspondiente</li>
-      <li>Revise su selección cuidadosamente</li>
-      <li>Presione el botón "Confirmar Voto" para proceder</li>
-      <li>Su voto es secreto y será registrado de forma anónima</li>
-    </ul>
-  </div>
-
-  <!-- Papeletas de votación -->
-  <div class="papeletas-container" *ngIf="!votoConfirmado">
-    <h3>Seleccione su opción de voto:</h3>
-    
-    <div class="papeletas-grid">
-      <div 
-        *ngFor="let papeleta of papeletas" 
-        class="papeleta"
-        [class.selected]="papeletaSeleccionada === papeleta.id"
-        [style.border-left-color]="papeleta.color"
-        (click)="seleccionarPapeleta(papeleta.id)">
-        
-        <div class="papeleta-header">
-          <input 
-            type="radio" 
-            [value]="papeleta.id"
-            [(ngModel)]="papeletaSeleccionada"
-            [id]="'papeleta-' + papeleta.id"
-            name="papeleta">
-          <label [for]="'papeleta-' + papeleta.id" class="checkbox-label"></label>
-          
-          <div class="numero-lista" *ngIf="papeleta.tipo === 'lista'">
-            {{ papeleta.numeroLista }}
-          </div>
-        </div>
-
-        <div class="partido-nombre">
-          <h4>{{ papeleta.partido }}</h4>
-        </div>
-
-        <div class="candidatos-lista" *ngIf="papeleta.candidatos.length > 0">
-          <div 
-            *ngFor="let candidato of papeleta.candidatos" 
-            class="candidato-item">
-            <span class="candidato-cargo">{{ candidato.cargo }}:</span>
-            <span class="candidato-nombre">{{ candidato.nombre }}</span>
-          </div>
-        </div>
-
-        <div class="voto-especial" *ngIf="papeleta.tipo === 'blanco'">
-          <p>✓ Voto en blanco</p>
-          <p class="descripcion">No selecciona ningún candidato</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Botón de confirmación -->
-    <div class="accion-buttons">
-      <button 
-        class="btn-confirmar"
-        [disabled]="papeletaSeleccionada === null"
-        (click)="confirmarVoto()">
-        Confirmar Voto
-      </button>
-    </div>
-  </div>
-
-  <!-- Modal de confirmación -->
-  <div class="modal-overlay" *ngIf="mostrarConfirmacion">
-    <div class="modal-confirmacion">
-      <h3>🗳️ Confirmar su voto</h3>
-      
-      <div class="voto-resumen" *ngIf="getPapeletaSeleccionada() as papeleta">
-        <p><strong>Ha seleccionado:</strong></p>
-        <div class="papeleta-confirmacion" [style.border-left-color]="papeleta.color">
-          <h4>{{ papeleta.partido }}</h4>
-          <div *ngIf="papeleta.numeroLista !== 999">
-            <p><strong>Lista {{ papeleta.numeroLista }}</strong></p>
-            <div class="candidatos-resumen">
-              <div *ngFor="let candidato of papeleta.candidatos" class="candidato-resumen">
-                {{ candidato.cargo }}: {{ candidato.nombre }}
-              </div>
-            </div>
+          <div *ngIf="papeleta.tipo === 'blanco'">
+            <p>Voto en blanco</p>
           </div>
         </div>
       </div>
 
       <div class="advertencia">
-        <p>⚠️ <strong>ATENCIÓN:</strong> Una vez confirmado, no podrá cambiar su voto.</p>
-        <p>¿Está seguro de que desea proceder?</p>
+        <p>⚠️ <strong>Atención:</strong> Una vez confirmado, no podrá cambiar su voto.</p>
       </div>
 
       <div class="modal-buttons">
-        <button class="btn-cancelar" (click)="cancelarVoto()">
-          Cancelar
-        </button>
-        <button class="btn-efectuar" (click)="efectuarVoto()">
-          Efectuar Voto
-        </button>
+        <button class="btn-cancelar" (click)="cancelarVoto()">Cancelar</button>
+        <button class="btn-efectuar" (click)="efectuarVoto()">Efectuar Voto</button>
       </div>
     </div>
   </div>
 
-  <!-- Confirmación de voto realizado -->
+  <!-- Voto confirmado -->
   <div class="voto-realizado" *ngIf="votoConfirmado">
     <div class="success-icon">✅</div>
     <h2>¡Voto registrado correctamente!</h2>
-    <p>Su voto ha sido registrado de forma anónima y segura.</p>
     <p>Gracias por participar en el proceso democrático.</p>
-    
+
     <div class="info-adicional">
       <p><strong>Circuito:</strong> {{ circuito.numero }}</p>
       <p><strong>Fecha y hora:</strong> {{ fechaActual | date:'dd/MM/yyyy HH:mm' }}</p>
     </div>
 
-    <!-- Botón para reiniciar (solo para testing) -->
-    <button class="btn-reiniciar" (click)="reiniciarVoto()">
-      Simular Nuevo Voto (Solo para pruebas)
-    </button>
+    <button class="btn-reiniciar" (click)="reiniciarVoto()">Simular Nuevo Voto (testing)</button>
   </div>
 </div>

@@ -1,0 +1,28 @@
+<div class="presidente-mesa-container">
+  <div class="mesa-header">
+    <h2>Panel Presidente de Mesa</h2>
+  </div>
+
+  <div class="button-group">
+    <button class="abrir" (click)="abrirMesa()">Abrir Mesa</button>
+    <button class="cerrar" (click)="cerrarMesa()">Cerrar Mesa</button>
+  </div>
+
+  <!-- Mensaje de éxito -->
+  <div *ngIf="mensajeExito" class="mensaje-exito">
+    {{ mensajeExito }}
+  </div>
+
+  <!-- Modal de confirmación -->
+  <div class="modal-overlay" *ngIf="mostrarConfirmacion">
+    <div class="modal-confirmacion">
+      <h3>⚠️ Confirmación</h3>
+      <p>¿Estás seguro que querés {{ accionPendiente }} la mesa?</p>
+
+      <div class="modal-buttons">
+        <button class="btn-cancelar" (click)="cancelarAccion()">Cancelar</button>
+        <button class="btn-confirmar" (click)="confirmarAccion()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>

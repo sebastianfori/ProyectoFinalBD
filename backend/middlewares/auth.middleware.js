@@ -1,12 +1,11 @@
 const jwt = require('jsonwebtoken');
 
 function authMiddleware(req, res, next) {
-  if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
-    return res.status(400).send({ message: 'inofrmacion de headers mal' });
-  }
-  const token = req.headers.authorization?.split(' ')[1];
+  const token = req.cookies?.token;
 
-  if (!token) return res.status(401).send({ message: 'Token no provisto' });
+  if (!token) {
+    return res.status(401).send({ message: 'Token no provisto' });
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

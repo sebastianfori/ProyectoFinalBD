@@ -1,0 +1,33 @@
+<div class="resultados-container">
+  <div class="resultados-header">
+    <h1>Resultados de Escrutinio</h1>
+    <div class="circuito-info">
+      <h2>Circuito {{ circuito.numero }}</h2>
+      <p>{{ circuito.establecimiento }}</p>
+      <p>{{ circuito.direccion }} - {{ circuito.departamento }}</p>
+    </div>
+  </div>
+
+  <div class="tabla-resultados">
+    <table>
+      <thead>
+        <tr>
+          <th>Número de Lista</th>
+          <th>Partido</th>
+          <th>Votos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let resultado of resultados">
+          <td>{{ resultado.numeroLista }}</td>
+          <td>{{ resultado.partido }}</td>
+          <td>{{ resultado.votos }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="acciones">
+    <button (click)="volver()">Volver al Panel</button>
+  </div>
+</div>
