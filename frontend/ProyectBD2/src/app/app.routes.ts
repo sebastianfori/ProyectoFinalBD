@@ -17,11 +17,16 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./vista-presidentemesa/vista-presidentemesa.component').then(m => m.PresidenteMesaComponent)
   },
-{
-  path: 'resultados',
-  loadComponent: () =>
-    import('./vista-resultados/vista-resultados.component').then(m => m.VistaResultadosComponent)
-},
-
+  {
+    path: 'resultados',
+    loadComponent: () =>
+      import('./vista-resultados/vista-resultados.component').then(m => m.VistaResultadosComponent)
+  },
+  //  Nueva ruta para votos observados
+  {
+    path: 'votosobservados',
+    loadComponent: () =>
+      import('./vista-votosobservados/vista-votosobservados.component').then(m => m.VotosObservadosComponent)
+  },
   { path: '**', redirectTo: 'login' }
 ];
