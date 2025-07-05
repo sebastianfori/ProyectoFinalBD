@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { PresidenteService } from '../presidente.service';
 
 @Component({
   selector: 'app-presidente-mesa',
@@ -10,31 +11,41 @@ import { Router } from '@angular/router';
   styleUrls: ['./vista-presidentemesa.component.scss']
 })
 export class PresidenteMesaComponent {
-
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private presidenteService: PresidenteService
+  ) {}
 
   mostrarConfirmacion = false;
   accionPendiente: 'abrir' | 'cerrar' | null = null;
   mensajeExito = '';
+  mensajeError = '';
 
   confirmarAccion() {
-    if (this.accionPendiente === 'abrir') {
-      console.log("Mesa abierta");
-      this.mensajeExito = 'Mesa abierta con éxito.';
-    } else if (this.accionPendiente === 'cerrar') {
-      console.log("Mesa cerrada");
-      this.mensajeExito = 'Mesa cerrada con éxito.';
+    const estado = this.accionPendiente === 'abrir' ? '1' : '0';
 
-      // Redirigir a resultados de escrutinio
-      this.router.navigate(['/resultados']);
-    }
+    this.presidenteService.actualizarEstadoMesa(estado).subscribe({
+      next: () => {
+        this.mensajeExito =
+          this.accionPendiente === 'abrir'
+            ? 'Mesa abierta con éxito.'
+            : 'Mesa cerrada con éxito.';
 
-    this.mostrarConfirmacion = false;
-    this.accionPendiente = null;
+        if (this.accionPendiente === 'cerrar') {
+          this.router.navigate(['/resultados']);
+        }
 
-    setTimeout(() => {
-      this.mensajeExito = '';
-    }, 3000);
+        setTimeout(() => (this.mensajeExito = ''), 3000);
+      },
+      error: (err) => {
+        this.mensajeError = err?.error?.error || 'Error al cambiar el estado de la mesa.';
+        setTimeout(() => (this.mensajeError = ''), 3000);
+      },
+      complete: () => {
+        this.mostrarConfirmacion = false;
+        this.accionPendiente = null;
+      }
+    });
   }
 
   cancelarAccion() {
@@ -52,9 +63,7 @@ export class PresidenteMesaComponent {
     this.mostrarConfirmacion = true;
   }
 
-  // método para navegar a votos observados
   verVotosObservados() {
     this.router.navigate(['/votosobservados']);
   }
-
 }

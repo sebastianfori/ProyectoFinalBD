@@ -41,7 +41,7 @@ async function findUser(cedula) {
   
 
   const [votantes] = await connection.execute(
-    'SELECT (Cedula, Nombre, Apellido, Fecha_Nacimiento, Numero, Serie, Ya_Voto, Numero_Circuito) FROM Votante WHERE Cedula = ?',
+    'SELECT * FROM Votante WHERE Cedula = ?',
     [cedula]
   );
 

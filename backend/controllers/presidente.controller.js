@@ -9,17 +9,18 @@ async function actualizarEstadoMesa(req, res) {
     const estado = req.body.estado; // 'true ' o 'false'
 
     // Validar que el estado sea 'true' o 'false'
-    if (estado !== 'true' && estado !== 'false') {
+    if (estado !== '1' && estado !== '0') {
         return res.status(400).send({ error: 'Estado inválido. Debe ser "true" o "false".' });
     }   
     // Validar que la hora actual sea válida para abrir o cerrar el circuito
     try {
         validarEstado(estado);
+ 
+    await circuitoModel.actualizarEstadoCircuito(estado, circuito)
+    res.status(200).send({ message: 'Mesa abierta/cerrada con éxito.' });
     } catch (error) {
         return res.status(400).send({ error: error.message });
     }
-    await circuitoModel.actualizarEstadoCircuito(estado, circuito)
- 
 }
 function validarEstado(estado) {
     const horaActual = new Date();
