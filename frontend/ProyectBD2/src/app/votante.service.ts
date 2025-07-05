@@ -5,16 +5,18 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class VotacionService {
-  private baseUrl = 'http://localhost:3000/api/votacion';
+export class  VotanteService {
+  private baseUrl = 'http://localhost:3001/api/votantes';
 
   constructor(private http: HttpClient) {}
 
-  getPapeletas(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/papeletas`);
+  emitirVoto(
+    papeletaId: number,
+    VotoExcepcional: 'blanco' | 'anulado' | 'normal' = 'normal'
+  ): Observable<any> {
+    return this.http.post(`${this.baseUrl}/votar`, { papeletaId, VotoExcepcional}, {
+    withCredentials: true
+  }); //);
   }
 
-  emitirVoto(papeletaId: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/emitir`, { papeletaId });
-  }
 }

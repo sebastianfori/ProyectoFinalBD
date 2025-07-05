@@ -38,49 +38,97 @@ async function obtenerVotosConCandidatos() {
         await connection.end();
     }   
 }
+//TODO remplazar votoExepcional por otra cosa 
 
-async function registrarVoto(idLista, cedula, votoObservado = false, votoExepcional = 'blanco'|| 'anulado ') {
+async function registrarVoto(numeroLista, cedula, votoEnBlanco = false, votoAnulado= false) {
 
     const connection = await mysql.createConnection(dbConfig);
     try {
+        let observed = false;
         // hacer todo esto transacional
         await connection.beginTransaction();
-        
+        if (votoEnBlanco && votoAnulado) {
+            throw new Error('No se puede votar en blanco y anular el voto al mismo tiempo');
+        }
         // Verificar si el votante ya ha votado traer votante por cedula 
         const [votante] = await connection.execute(
             'SELECT * FROM Votante WHERE Cedula = ?',  
             [cedula]
         );    
         if (votante.length === 0) {
-            throw new Error('Votante no encontrado');
+           const noEncontradoError = new Error('Votante no encontrado');
+           noEncontradoError.statusCode = 404;
+           throw noEncontradoError;
         }   
         if (votante[0].Ya_Voto) {  
-            throw new Error('El votante ya ha votado');
-        } 
-        if (!votante[0].HabilitadoVotarPresidenteMesa) {
-            throw new Error('El votante no está habilitado para votar en esta mesa');
+            const yaVotoError = new Error('El votante ya ha votado');
+            yaVotoError.statusCode = 400;
+            throw yaVotoError;
         }
+         
         // Registrar el voto
         const [result] = await connection.execute(
-            'UPDATE INTO Votante SET Ya_Voto = TRUE WHERE Cedula = ?',
+            'UPDATE Votante SET Ya_Voto = TRUE WHERE Cedula = ?',
             [cedula]
         );
-        if (result.affectedRows === 0) {
-            throw new Error('No se pudo actualizar el estado del votante');
-        }   
+        const [EsObservado] = await connection.execute(
+            'SELECT * FROM Observados Where Cedula = ?',
+            [cedula]
+        );
+        let numeroCircuito = votante[0].Numero_Circuito;
+        
+        if (EsObservado.length > 0) {
+            // Si el votante está en la tabla Observados, marcar el voto como observado
+            observed = true;
+            numeroCircuito = EsObservado[0].Numero_Circuito; // Usar el circuito del votante observado
+            
+        }
+        let idLista;
+        // verificar que la mesa esta abierta
+        const [circuito] = await connection.execute(
+            'SELECT EstaAbierto FROM Circuito WHERE Numero_Circuito = ?',
+            [numeroCircuito]
+        );
+
+        if (circuito.length === 0) {
+            const circuitoNoExisteError = new Error('El circuito no existe');
+            circuitoNoExisteError.statusCode = 404;
+            throw circuitoNoExisteError;
+        }
+        if (!circuito[0].EstaAbierto) {
+            const circuitoCerradoError = new Error('El circuito está cerrado');
+            circuitoCerradoError.statusCode = 400;
+            throw circuitoCerradoError;
+        }
+        if (!votoEnBlanco  && !votoAnulado) {
+            // Si el voto es en blanco o anulado, no se necesita verificar la lista
+            const [rows] = await connection.execute(
+            'SELECT ID_Lista FROM Lista WHERE Numero_Lista = ?',
+            [numeroLista] // acá recibís el número como 100, 200, etc.
+            );
+            
+            if (rows.length === 0) {
+                const listaNoExisteError = new Error('El votante voto por una lista que no existe');
+                listaNoExisteError.statusCode = 404;
+                throw listaNoExisteError;
+            }
+
+            idLista = rows[0].ID_Lista;
+        } else {
+            // Si el voto es en blanco o anulado, no se necesita verificar la lista
+            idLista = null; // o el ID de una lista especial para votos en blanco/anulados
+        }
+        //SI EL VOTANTE ES OBSERVADO EL CIRCUITO 
         // Registrar el voto en la tabla Voto
         const [votoResult] = await connection.execute(
             'INSERT INTO Voto (Observado, En_Blanco, anulado, Numero_Circuito, ID_Lista) VALUES (?, ?, ?, ?, ?)',
-            [votoObservado, votoExepcional === 'blanco', votoExepcional === 'anulado', votante[0].Numero_Circuito, idLista]   
+            [observed, votoEnBlanco, votoAnulado, numeroCircuito, idLista]   
         );
-        if (votoResult.affectedRows === 0) {
-            throw new Error('No se pudo registrar el voto');
-        }     
         // Confirmar la transacción
         await connection.commit();
         return { message: 'Voto registrado exitosamente' };
     } catch (error) {
-        console.error('Error al registrar el voto:', error);        
+        console.error('Error al registrar el voto modelo:', error);        
         // Revertir la transacción en caso de error
         await connection.rollback();
         throw error;

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PapeletasService } from '../papeletas.service'; // Asegurate de importar bien
+import { PapeletasService } from '../papeletas.service';
+import { VotanteService } from '../votante.service';
 
 interface Candidato {
   id: number;
@@ -10,12 +11,11 @@ interface Candidato {
 }
 
 interface Papeleta {
-  id: number;
   numeroLista: number;
   partido: string;
   color: string;
   candidatos: Candidato[];
-  tipo: 'lista' | 'blanco' | 'anulado';
+  tipo: 'normal' | 'blanco' | 'anulado';
 }
 
 @Component({
@@ -32,14 +32,10 @@ export class VistaVotanteComponent implements OnInit {
   mostrarConfirmacion = false;
   fechaActual = new Date();
 
-  circuito = {
-    numero: 'A-001',
-    establecimiento: 'Escuela No. 15',
-    departamento: 'Montevideo',
-    direccion: 'Av. 18 de Julio 1234'
-  };
-
-  constructor(private votacionService: PapeletasService) {}
+  constructor(
+    private votacionService: PapeletasService,
+    private votanteService: VotanteService // ✅ Servicio correctamente inyectado
+  ) {}
 
   ngOnInit() {
     this.cargarPapeletas();
@@ -48,13 +44,11 @@ export class VistaVotanteComponent implements OnInit {
   cargarPapeletas() {
     this.votacionService.obtenerListas().subscribe({
       next: listas => {
-        console.log('Listas recibidas del backend:', listas);
         this.papeletas = listas.map(lista => ({
-          id: lista.ID_Lista,
           numeroLista: lista.Numero_Lista,
           partido: lista.Partido,
-          color: this.generarColor(lista.ID_Lista), // opcional: genera un color por lista
-          tipo: 'lista',
+          color: this.generarColor(lista.ID_Lista),
+          tipo: 'normal',
           candidatos: [
             {
               id: lista.Presidente.ID_Candidato,
@@ -69,15 +63,22 @@ export class VistaVotanteComponent implements OnInit {
           ]
         }));
 
-        // Agregar voto en blanco al final
-        this.papeletas.push({
-          id: 999,
-          numeroLista: 999,
-          partido: 'Voto en Blanco',
-          color: '#CCCCCC',
-          tipo: 'blanco',
-          candidatos: []
-        });
+        this.papeletas.push(
+          {
+            numeroLista: 999,
+            partido: 'Voto en Blanco',
+            color: '#CCCCCC',
+            tipo: 'blanco',
+            candidatos: []
+          },
+          {
+            numeroLista: 998,
+            partido: 'Voto Anulado',
+            color: '#FF0000',
+            tipo: 'anulado',
+            candidatos: []
+          }
+        );
       },
       error: err => {
         console.error('Error al cargar papeletas:', err);
@@ -104,13 +105,20 @@ export class VistaVotanteComponent implements OnInit {
   }
 
   efectuarVoto() {
-    console.log('Voto efectuado para papeleta ID:', this.papeletaSeleccionada);
-    this.votoConfirmado = true;
-    this.mostrarConfirmacion = false;
+    const papeleta = this.getPapeletaSeleccionada();
+    if (!papeleta) return;
 
-    setTimeout(() => {
-      alert('¡Su voto ha sido registrado correctamente!');
-    }, 1000);
+    this.votanteService.emitirVoto(papeleta.numeroLista, papeleta.tipo).subscribe({
+      next: () => {
+        this.votoConfirmado = true;
+        this.mostrarConfirmacion = false;
+      },
+      error: err => {
+        console.error('Error al registrar el voto:', err);
+        alert(err.error?.error || 'Error al registrar el voto.');
+        this.mostrarConfirmacion = false;
+      }
+    });
   }
 
   cancelarVoto() {
@@ -118,7 +126,7 @@ export class VistaVotanteComponent implements OnInit {
   }
 
   getPapeletaSeleccionada(): Papeleta | undefined {
-    return this.papeletas.find(p => p.id === this.papeletaSeleccionada);
+    return this.papeletas.find(p => p.numeroLista === this.papeletaSeleccionada);
   }
 
   reiniciarVoto() {
