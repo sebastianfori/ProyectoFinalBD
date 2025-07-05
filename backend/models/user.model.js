@@ -3,17 +3,51 @@ const dbConfig = require('../config/db.config');
 const bcrypt = require('bcrypt');
 
 
+async function observarVotante(cedula, numeroCircuito) {
+      const connection = await mysql.createConnection(dbConfig);
+  try {
+
+    // Buscar el votante por cédula
+    const [votantes] = await connection.execute(
+      'SELECT * FROM Votante WHERE Cedula = ?',
+      [cedula]
+    );
+    if (votantes.length === 0) {
+      return { error: 'Votante no encontrado' };
+    }
+    const votante = votantes[0];
+    // Verificar si el votante ya ha votado
+    if (votante.Ya_Voto) {
+      return { error: 'El votante ya ha votado' };
+    }
+    // insertar el votante en la tabla Observado
+    const [result] = await connection.execute(
+      'INSERT INTO Observados (Cedula, Numero_Circuito) VALUES (?, ?)',
+      [cedula, numeroCircuito]
+    );
+
+  } catch (error) {
+    console.error('Error al observar al votante:', error);
+    return { error: 'Error al observar al votante' };
+  } finally {
+    await connection.end();
+  }
+  return { message: 'Votante observado correctamente' };
+}
+
 async function findUser(cedula) {
   const connection = await mysql.createConnection(dbConfig);
+  try {
+  
 
   const [votantes] = await connection.execute(
-    'SELECT * FROM Votante WHERE Cedula = ?',
+    'SELECT (Cedula, Nombre, Apellido, Fecha_Nacimiento, Numero, Serie, Ya_Voto, Numero_Circuito) FROM Votante WHERE Cedula = ?',
     [cedula]
   );
 
   if (votantes.length === 0) {
     await connection.end();
-    return { error: 'Credenciales inválidas' };
+    return { error: 'Votante no encontrado' };
   }
 
   const votante = votantes[0];
@@ -23,36 +57,27 @@ async function findUser(cedula) {
     [cedula]
   );
 
-  await connection.end();
 
   if (miembros && miembros.length > 0) {
-    return { tipo: 'miembro_mesa', usuario: votante, password: votante.Password };
+    return { tipo: 'miembro_mesa', miembro: miembros[0], usuario: votante,  password: votante.Password };
   }
 
   return { tipo: 'votante', usuario: votante, password: votante.Password };
-}
-
-
-async function habilitarVotante(cedula) {
-  const connection = await mysql.createConnection(dbConfig);
-  // 1. hacer el update del votante si existe
-  const [result] = await connection.execute(
-    'UPDATE Votante SET HabilitadoVotarPresidenteMesa = 1 WHERE Cedula = ?',
-    [cedula]
-  );
-  if (result.affectedRows === 0) {
-    await connection.end();
-    return { error: 'Votante no encontrado o ya habilitado' };
+  } catch (error) {
+    console.error('Error al buscar el votante:', error);
+    return { error: 'Error al buscar el votante' };
   }
-  await connection.end();
-  return { message: 'Votante habilitado exitosamente' };
+  finally {
+      await connection.end();
+  } 
 }
 
 
 
 
 module.exports = {
-  findUser
+  findUser,
+  observarVotante
 };
 
   // // 3. Verificar si el circuito está abierto

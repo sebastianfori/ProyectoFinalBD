@@ -1,6 +1,4 @@
 
-// actualizar estado de mesa  lo que hace busca la mesa del presidente, veo si el circuito esta abierto o cerrado 
-//y permitir abrirlo despues de la hora pautada y tambien permitit cerralo despues de la hora pautada
 const db = require('../config/db.config');
 const circuitoModel = require('../models/circuito.model');
 userModel = require('../models/user.model');
@@ -40,19 +38,52 @@ function view(req, res) {
   res.send("Vista del presidente");
 }
 
-function habilitarVotante(req, res) {
- res.send("Vista del presidente");
-}
-
 function observarVoto(req, res) {
-  res.send("Vista del presidente");
+    const { user } = req;
+    const cedula = req.body.cedula;
+    console.log('USER EN OBSERVAR:', user);
+  
+
+    // Validar que la cédula sea un número válido
+    if (!cedula || isNaN(cedula)) {
+        return res.status(400).send({ error: 'Cédula inválida.' });
+    }
+    // Buscar al votante por cédula
+    userModel.observarVotante(cedula, user.miembro.Numero_Circuito)
+        .then(result => {
+            if (result.error) {
+                return res.status(400).send({ error: result.error });
+            }
+            res.status(200).send({ message: result.message });
+        })
+        .catch(error => {
+            console.error('Error al observar el voto:', error);
+            res.status(500).send({ error: 'Error al observar el voto.' });  
+        });
+        
+
 }
+async function buscarVotantePorCedula(req, res) {
+    const { cedula } = req.params;
+    try {
+        const votante = await userModel.findUser(cedula);
+        if (votante.error) {
+            return res.status(404).send({ error: votante.error });
+        }
+        res.status(200).send(votante);
+    } catch (error) {
+        console.error('Error al buscar el votante por cédula:', error);
+        res.status(500).send({ error: 'Error al buscar el votante por cédula.' });
+    }
+    
+}
+    
 
 module.exports = {
-  view,
-  actualizarEstadoMesa,
-  habilitarVotante,
-  observarVoto,
+    view,
+    actualizarEstadoMesa,
+    observarVoto,
+    buscarVotantePorCedula
 };
 // async function buscarVotantePorCedula(cedula) {
 
@@ -70,5 +101,3 @@ module.exports = {
 //     if (horaActual < horaApertura) {
 //         return res.status(400).send({ error: 'No se puede habilitar al votante antes de las 8:00 AM.' });
 //     }
-//     // Llamar al modelo para habilitar al votante
-    

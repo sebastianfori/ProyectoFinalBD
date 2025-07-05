@@ -9,6 +9,7 @@ async function login(req, res) {
   console.log('Login attempt with password:', password);
 
   const user = await User.findUser(cedula);
+  console.log('User found:', user);
 
   if (user.error) {
     return res.status(401).json({ error: user.error });
@@ -18,11 +19,11 @@ async function login(req, res) {
   const passIsValid = await bcrypt.compare(password, user.usuario.password);
 
   if (!passIsValid) {
-    return res.status(401).json({ error: 'Credenciales inválidas' });
+    return res.status(401).json({ error: 'Credenciales inválidas controller' });
   }
 
   const token = jwt.sign(
-    { cedula: user.usuario.Cedula, tipo: user.tipo },
+    { cedula: user.usuario.Cedula, tipo: user.tipo, miembro: user.miembro},
     process.env.JWT_SECRET,
     { expiresIn: '1d' }
   );

@@ -5,11 +5,6 @@
       <div class="escudo-placeholder">🇺🇾</div>
     </div>
     <h1>ELECCIONES PRESIDENCIALES 2025</h1>
-    <div class="circuito-info">
-      <h2>Circuito {{ circuito.numero }}</h2>
-      <p>{{ circuito.establecimiento }}</p>
-      <p>{{ circuito.direccion }} - {{ circuito.departamento }}</p>
-    </div>
   </div>
 
   <!-- Instrucciones -->
@@ -21,7 +16,6 @@
       <li>Su voto es secreto y seguro.</li>
     </ul>
   </div>
-
   <!-- Papeletas -->
   <div class="papeletas-container" *ngIf="!votoConfirmado">
     <h3>Seleccione su opción de voto:</h3>
@@ -30,20 +24,20 @@
       <div 
         *ngFor="let papeleta of papeletas" 
         class="papeleta"
-        [class.selected]="papeletaSeleccionada === papeleta.id"
+        [class.selected]="papeletaSeleccionada === papeleta.numeroLista"
         [style.border-left-color]="papeleta.color"
-        (click)="seleccionarPapeleta(papeleta.id)">
+        (click)="seleccionarPapeleta(papeleta.numeroLista)">
 
         <div class="papeleta-header">
           <input 
             type="radio" 
-            [value]="papeleta.id"
+            [value]="papeleta.numeroLista"
             [(ngModel)]="papeletaSeleccionada"
-            [id]="'papeleta-' + papeleta.id"
+            [id]="'papeleta-' + papeleta.numeroLista"
             name="papeleta">
-          <label [for]="'papeleta-' + papeleta.id" class="checkbox-label"></label>
+          <label [for]="'papeleta-' + papeleta.numeroLista" class="checkbox-label"></label>
 
-          <div class="numero-lista" *ngIf="papeleta.tipo === 'lista'">
+          <div class="numero-lista" *ngIf="papeleta.tipo === 'normal'">
             {{ papeleta.numeroLista }}
           </div>
         </div>
@@ -120,7 +114,6 @@
     <p>Gracias por participar en el proceso democrático.</p>
 
     <div class="info-adicional">
-      <p><strong>Circuito:</strong> {{ circuito.numero }}</p>
       <p><strong>Fecha y hora:</strong> {{ fechaActual | date:'dd/MM/yyyy HH:mm' }}</p>
     </div>
 

@@ -4,8 +4,7 @@ const bcript = require('bcrypt');
 // Función para encriptar una contraseña
 async function encryptPassword(password) {
     const saltRounds = 10; // Número de rondas de sal
-    const salt = await bcript.genSalt(saltRounds);
-    const hashedPassword = await bcript.hash(password, salt);
+    const hashedPassword = await bcript.hash(password, saltRounds);
     return hashedPassword;
 }
 
@@ -27,5 +26,3 @@ encryptPassword('123456')
         console.error('Error:', err);
     });
 
-    $2a$10$0abS/XKtb0LVglSPaBS/6.F2PES6ckVKBIwDAtAvFTEXZdv0jRfWa
-    $2b$10$1d9D.mqL/IOHr6HtGrMxNuTgLRkX5pMtpZBlVVw.yVhvFSSuFgsZW

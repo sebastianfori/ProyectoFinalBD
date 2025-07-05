@@ -39,7 +39,6 @@ CREATE TABLE IF NOT EXISTS Votante (
     Numero INT,
     Serie VARCHAR(50),
     Ya_Voto BOOLEAN,
-    HabilitadoVotarPresidenteMesa BOOLEAN,
     Numero_Circuito INT,
     password VARCHAR(255),
     FOREIGN KEY (Numero_Circuito) REFERENCES Circuito(Numero_Circuito)
@@ -118,6 +117,11 @@ CREATE TABLE IF NOT EXISTS Voto (
   FOREIGN KEY (ID_Lista) REFERENCES Lista(ID_Lista)
 );
 
+CREATE TABLE IF NOT EXISTS Observados(
+  Cedula VARCHAR(20) PRIMARY KEY,
+  Numero_Circuito INT,
+  FOREIGN KEY (Numero_Circuito) REFERENCES Circuito(Numero_Circuito)
+);
 
 -- 1. Departamento
 INSERT INTO Departamento (Nombre) VALUES
@@ -176,16 +180,16 @@ INSERT INTO Integra (ID_Candidato, ID_Lista) VALUES
 (7, 4), (8, 4),
 (9, 5), (10, 5);
 -- Insertar 2 votantes en distintos circuitos
-INSERT INTO Votante (Cedula, Nombre, Apellido, Fecha_Nacimiento, Numero, Serie, Ya_Voto, HabilitadoVotarPresidenteMesa, Numero_Circuito, password)
+INSERT INTO Votante (Cedula, Nombre, Apellido, Fecha_Nacimiento, Numero, Serie, Ya_Voto, Numero_Circuito, password)
 VALUES
-('11111111', 'Pedro', 'Ramírez', '1995-04-10', 45, 'A', FALSE, TRUE, 101, '$2b$10$1d9D.mqL/IOHr6HtGrMxNuTgLRkX5pMtpZBlVVw.yVhvFSSuFgsZW'),
-('22222222', 'Lucía', 'Torres', '2000-08-22', 150, 'B', FALSE, TRUE, 102, '$2b$10$1d9D.mqL/IOHr6HtGrMxNuTgLRkX5pMtpZBlVVw.yVhvFSSuFgsZW');
+('11111111', 'Pedro', 'Ramírez', '1995-04-10', 45, 'A', FALSE, 101, '$2b$10$1d9D.mqL/IOHr6HtGrMxNuTgLRkX5pMtpZBlVVw.yVhvFSSuFgsZW'),
+('22222222', 'Lucía', 'Torres', '2000-08-22', 150, 'B', FALSE, 102, '$2b$10$1d9D.mqL/IOHr6HtGrMxNuTgLRkX5pMtpZBlVVw.yVhvFSSuFgsZW');
 
 -- Insertar 2 miembros de mesa (tipo presidente)
-INSERT INTO Votante (Cedula, Nombre, Apellido, Fecha_Nacimiento, Numero, Serie, Ya_Voto, HabilitadoVotarPresidenteMesa, Numero_Circuito, password)
+INSERT INTO Votante (Cedula, Nombre, Apellido, Fecha_Nacimiento, Numero, Serie, Ya_Voto, Numero_Circuito, password)
 VALUES
-('33333333', 'Jorge', 'Martín', '1980-02-14', 25, 'A', FALSE, TRUE, 101, '$2b$10$1d9D.mqL/IOHr6HtGrMxNuTgLRkX5pMtpZBlVVw.yVhvFSSuFgsZW'),
-('44444444', 'Valeria', 'Muñoz', '1985-11-09', 175, 'B', FALSE, TRUE, 102, '$2b$10$1d9D.mqL/IOHr6HtGrMxNuTgLRkX5pMtpZBlVVw.yVhvFSSuFgsZW');
+('33333333', 'Jorge', 'Martín', '1980-02-14', 25, 'A', FALSE, 101, '$2b$10$1d9D.mqL/IOHr6HtGrMxNuTgLRkX5pMtpZBlVVw.yVhvFSSuFgsZW'),
+('44444444', 'Valeria', 'Muñoz', '1985-11-09', 175, 'B', FALSE, 102, '$2b$10$1d9D.mqL/IOHr6HtGrMxNuTgLRkX5pMtpZBlVVw.yVhvFSSuFgsZW');
 
 -- Asociarlos como miembros de mesa
 INSERT INTO MiembroMesa (CedulaVotante, Tipo_Miembro, Numero_Circuito)
