@@ -25,4 +25,9 @@ export class PresidenteService {
       withCredentials: true
     });
   }
+  getResumenVotos() {
+  return this.http.get<any>('http://localhost:3001/api/presidentes/resumen-votos', {
+    withCredentials: true
+  });
+}
 }

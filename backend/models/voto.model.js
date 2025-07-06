@@ -19,6 +19,70 @@ async function obtenerVotosPorLista() {
         await connection.end();   
     }
 }
+async function obtenerResumenVotacion() {
+  const connection = await mysql.createConnection(dbConfig);
+
+  try {
+    // ✅ Solo votos válidos y no observados
+    const [resumenPorPartido] = await connection.execute(`
+      SELECT 
+        p.NombrePartido,
+        COUNT(v.ID_Voto) AS Votos
+      FROM Voto v
+      JOIN Lista l ON v.ID_Lista = l.ID_Lista
+      JOIN PartidoPolitico p ON l.ID_Partido = p.ID_Partido
+      WHERE v.En_Blanco = FALSE AND v.anulado = FALSE AND v.Observado = FALSE
+      GROUP BY p.NombrePartido
+    `);
+
+    // ✅ Total de votos válidos no observados
+    const [totalVotos] = await connection.execute(`
+      SELECT COUNT(*) AS total FROM Voto
+      WHERE En_Blanco = FALSE AND anulado = FALSE AND Observado = FALSE
+    `);
+
+    // ✅ Votos en blanco no observados
+    const [blancos] = await connection.execute(`
+      SELECT COUNT(*) AS total FROM Voto
+      WHERE En_Blanco = TRUE AND Observado = FALSE
+    `);
+
+    // ✅ Votos anulados no observados
+    const [anulados] = await connection.execute(`
+      SELECT COUNT(*) AS total FROM Voto
+      WHERE anulado = TRUE AND Observado = FALSE
+    `);
+
+    // ✅ Votos observados (únicamente los observados, sin importar si eran válidos/blancos/anulados)
+    const [observados] = await connection.execute(`
+      SELECT COUNT(*) AS total FROM Voto
+      WHERE Observado = TRUE
+    `);
+
+    const totalValidos = totalVotos[0].total || 1; // evitar división por 0
+
+    const partidosConPorcentaje = resumenPorPartido.map(p => ({
+      nombre: p.NombrePartido,
+      votos: p.Votos,
+      porcentaje: ((p.Votos / totalValidos) * 100).toFixed(2) + '%'
+    }));
+
+    return {
+      partidos: partidosConPorcentaje,
+      votos_blanco: blancos[0].total,
+      votos_anulados: anulados[0].total,
+      votos_observados: observados[0].total,
+      total_votos_validos: totalValidos
+    };
+  } catch (error) {
+    console.error('Error al obtener resumen de votación:', error);
+    throw error;
+  } finally {
+    await connection.end();
+  }
+}
+
+
 async function obtenerVotosConCandidatos() {
     const connection = await mysql.createConnection(dbConfig);
     try {
@@ -138,7 +202,8 @@ async function registrarVoto(numeroLista, cedula, votoEnBlanco = false, votoAnul
 }
 module.exports = {
     obtenerVotosPorLista,
-    registrarVoto
+    registrarVoto,
+    obtenerResumenVotacion
 };
 // CREATE TABLE IF NOT EXISTS Voto (
 //   ID_Voto INT PRIMARY KEY AUTO_INCREMENT,

@@ -1,30 +1,41 @@
 <div class="resultados-container">
   <div class="resultados-header">
     <h1>Resultados de Escrutinio</h1>
-    <div class="circuito-info">
-      <h2>Circuito {{ circuito.numero }}</h2>
-      <p>{{ circuito.establecimiento }}</p>
-      <p>{{ circuito.direccion }} - {{ circuito.departamento }}</p>
-    </div>
   </div>
 
-  <div class="tabla-resultados">
-    <table>
-      <thead>
-        <tr>
-          <th>Número de Lista</th>
-          <th>Partido</th>
-          <th>Votos</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let resultado of resultados">
-          <td>{{ resultado.numeroLista }}</td>
-          <td>{{ resultado.partido }}</td>
-          <td>{{ resultado.votos }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <div *ngIf="mensajeError" class="error">{{ mensajeError }}</div>
+
+  <div *ngIf="resumen">
+    <!-- Tabla de resultados por partido -->
+    <div class="tabla-resultados">
+      <table>
+        <thead>
+          <tr>
+            <th>Partido</th>
+            <th>Votos</th>
+            <th>Porcentaje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let partido of resumen.partidos">
+            <td>{{ partido.nombre }}</td>
+            <td>{{ partido.votos }}</td>
+            <td>{{ partido.porcentaje }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Resumen de votos especiales -->
+    <div class="votos-especiales">
+      <h3>Resumen General</h3>
+      <ul>
+        <li><strong>Votos en blanco:</strong> {{ resumen.votos_blanco }}</li>
+        <li><strong>Votos anulados:</strong> {{ resumen.votos_anulados }}</li>
+        <li><strong>Votos observados:</strong> {{ resumen.votos_observados }}</li>
+        <li><strong>Total de votos válidos:</strong> {{ resumen.total_votos_validos }}</li>
+      </ul>
+    </div>
   </div>
 
   <div class="acciones">

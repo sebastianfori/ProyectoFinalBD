@@ -2,6 +2,7 @@
 const db = require('../config/db.config');
 const circuitoModel = require('../models/circuito.model');
 userModel = require('../models/user.model');
+const votoModel = require('../models/voto.model');
 
 async function actualizarEstadoMesa(req, res) {
     const { user } = req;
@@ -78,13 +79,23 @@ async function buscarVotantePorCedula(req, res) {
     }
     
 }
+async function obtenerResumenVotos(req, res) {
+  try {
+    const resumen = await votoModel.obtenerResumenVotacion();
+    res.status(200).json(resumen);
+  } catch (error) {
+    console.error('Error en el controlador al obtener resumen de votos:', error);
+    res.status(500).json({ error: 'Error interno al obtener el resumen de votos.' });
+  }
+}
     
 
 module.exports = {
     view,
     actualizarEstadoMesa,
     observarVoto,
-    buscarVotantePorCedula
+    buscarVotantePorCedula,
+    obtenerResumenVotos
 };
 // async function buscarVotantePorCedula(cedula) {
 

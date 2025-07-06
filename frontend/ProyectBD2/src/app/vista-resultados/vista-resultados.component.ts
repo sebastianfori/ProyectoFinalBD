@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { PresidenteService } from '../presidente.service';
 
 @Component({
   selector: 'app-resultados',
@@ -9,11 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './vista-resultados.component.html',
   styleUrls: ['./vista-resultados.component.scss']
 })
-export class VistaResultadosComponent {
-
-  constructor(private router: Router) {}
-
-  // Datos simulados (reemplazá con tu API)
+export class VistaResultadosComponent implements OnInit {
   circuito = {
     numero: 123,
     establecimiento: 'Escuela Nº1',
@@ -21,15 +18,26 @@ export class VistaResultadosComponent {
     departamento: 'Montevideo'
   };
 
-  resultados = [
-    { numeroLista: 1, partido: 'Partido A', votos: 120 },
-    { numeroLista: 2, partido: 'Partido B', votos: 95 },
-    { numeroLista: 3, partido: 'Partido C', votos: 78 },
-    { numeroLista: 'Blanco', partido: 'Voto en blanco', votos: 12 }
-  ];
+  resumen: any = null;
+  mensajeError = '';
+
+  constructor(
+    private router: Router,
+    private presidenteService: PresidenteService
+  ) {}
+
+  ngOnInit() {
+    this.presidenteService.getResumenVotos().subscribe({
+      next: (data) => {
+        this.resumen = data;
+      },
+      error: (err) => {
+        this.mensajeError = err?.error?.error || 'Error al obtener los resultados.';
+      }
+    });
+  }
 
   volver() {
     this.router.navigate(['/presidentemesa']);
   }
-
 }
