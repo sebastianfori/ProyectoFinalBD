@@ -1,4 +1,4 @@
-// Variables (heredadas para consistencia)
+// 🎨 Variables generales (compatibles con tu sistema)
 $primary-color: #2c3e50;
 $secondary-color: #3498db;
 $success-color: #27ae60;
@@ -9,11 +9,10 @@ $border-color: #dee2e6;
 $text-color: #2c3e50;
 $shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
-// Estilos del componente
 .votosobservados-container {
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 30px;
+  padding: 40px;
   background-color: $background-color;
   border-radius: 15px;
   box-shadow: $shadow;
@@ -25,37 +24,44 @@ $shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   align-items: center;
 
   h2 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: bold;
     color: $primary-color;
     margin-bottom: 30px;
   }
 
-  // Input y botón de búsqueda
+  // 🔍 Input y botón de búsqueda
   .busqueda {
     display: flex;
-    gap: 10px;
     width: 100%;
-    max-width: 400px;
-    margin-bottom: 30px;
+    max-width: 500px;
+    margin-bottom: 25px;
+    gap: 15px;
 
     input {
       flex: 1;
-      padding: 10px 15px;
+      padding: 12px 15px;
       border: 1px solid $border-color;
       border-radius: 8px;
       font-size: 1rem;
+      box-shadow: $shadow;
+
+      &:focus {
+        outline: none;
+        border-color: $secondary-color;
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
+      }
     }
 
     button {
-      padding: 10px 15px;
+      padding: 12px 20px;
       background: linear-gradient(135deg, $secondary-color 0%, #2980b9 100%);
       color: white;
       border: none;
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: all 0.3s ease;
       box-shadow: $shadow;
 
       &:hover {
@@ -65,38 +71,49 @@ $shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
   }
 
-  // Mensajes
-  .mensaje {
-    margin-top: -20px;
+  // ✅ Mensajes
+  .error, .exito {
     margin-bottom: 20px;
     font-weight: bold;
-
-    &.exito {
-      color: $success-color;
-    }
-
-    &.error {
-      color: $danger-color;
-    }
+    padding: 10px 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
   }
 
-  // Datos del votante
+  .error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  .exito {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  // 👤 Datos del votante
   .datos-votante {
     width: 100%;
+    max-width: 600px;
     background: white;
     border: 1px solid $border-color;
     border-radius: 12px;
-    padding: 20px;
+    padding: 25px;
     box-shadow: $shadow;
+    margin-top: 20px;
 
     h3 {
       margin-top: 0;
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       color: $primary-color;
+      margin-bottom: 20px;
     }
 
     p {
-      margin: 8px 0;
+      margin: 10px 0;
       font-size: 1rem;
 
       strong {
@@ -105,9 +122,9 @@ $shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
     }
 
-    .boton-observar {
-      margin-top: 20px;
-      padding: 12px;
+    button {
+      margin-top: 25px;
+      padding: 12px 20px;
       background: linear-gradient(135deg, $warning-color 0%, #f1c40f 100%);
       color: white;
       border: none;
@@ -115,7 +132,7 @@ $shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: all 0.3s ease;
       box-shadow: $shadow;
 
       &:hover {
