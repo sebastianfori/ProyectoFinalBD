@@ -14,4 +14,15 @@ export class PresidenteService {
       withCredentials: true // ✅ Envia cookies con la solicitud
     });
   }
+    buscarVotante(cedula: string) {
+    return this.http.get<any>(`http://localhost:3001/api/presidentes/buscar-votante/${cedula}`, {
+      withCredentials: true
+    });
+  }
+
+  observarVoto(cedula: string) {
+    return this.http.post<any>('http://localhost:3001/api/presidentes/observar-voto', { cedula }, {
+      withCredentials: true
+    });
+  }
 }

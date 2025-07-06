@@ -30,7 +30,7 @@ export const routes: Routes = [
   {
     path: 'votosobservados',
     loadComponent: () =>
-      import('./vista-votosobservados/vista-votosobservados.component').then(m => m.VotosObservadosComponent)
+      import('./vista-votosobservados/vista-votosobservados.component').then(m => m.VistaVotosObservadosComponent)
   },
   { path: '**', redirectTo: 'inicio' } // 
 ];

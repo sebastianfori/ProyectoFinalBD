@@ -1,56 +1,47 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { PresidenteService } from '../presidente.service';
 
 @Component({
-  selector: 'app-votos-observados',
+  selector: 'app-vista-votosobservados',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './vista-votosobservados.component.html',
   styleUrls: ['./vista-votosobservados.component.scss']
 })
-export class VotosObservadosComponent {
+export class VistaVotosObservadosComponent {
+  cedula = '';
+  votante: any = null;
+  mensajeExito = '';
+  mensajeError = '';
 
-  votantesObservados: any[] = [];
-  filtroCedula: string = '';
+  constructor(private presidenteService: PresidenteService) {}
 
-  constructor(private http: HttpClient) {
-    this.obtenerVotantesObservados();
-  }
-
-  obtenerVotantesObservados() {
-    this.http.get<any[]>('http://localhost:3000/votosobservados').subscribe({
+  buscarVotante() {
+    this.presidenteService.buscarVotante(this.cedula).subscribe({
       next: (data) => {
-        this.votantesObservados = data;
+        this.votante = data;
+        this.mensajeError = '';
       },
       error: (err) => {
-        console.error('Error al obtener votantes observados:', err);
+        this.votante = null;
+        this.mensajeError = err?.error?.error || 'Error al buscar el votante.';
       }
     });
   }
 
-  aprobarVotante(id: number) {
-    this.http.post('http://localhost:3000/votosobservados/aprobar', {
-      id: id,
-      aprobado: true
-    }).subscribe({
-      next: () => {
-        this.obtenerVotantesObservados();
+  observarVoto() {
+    if (!this.votante?.usuario?.Cedula) return;
+    this.presidenteService.observarVoto(this.votante.usuario.Cedula).subscribe({
+      next: (data) => {
+        this.mensajeExito = data.message || 'Voto observado con éxito.';
+        setTimeout(() => (this.mensajeExito = ''), 3000);
       },
       error: (err) => {
-        console.error('Error al aprobar votante:', err);
+        this.mensajeError = err?.error?.error || 'Error al observar el voto.';
+        setTimeout(() => (this.mensajeError = ''), 3000);
       }
     });
   }
-
-  get votantesFiltrados() {
-    if (!this.filtroCedula) {
-      return this.votantesObservados;
-    }
-    return this.votantesObservados.filter(v =>
-      v.cedula.includes(this.filtroCedula)
-    );
-  }
-
 }

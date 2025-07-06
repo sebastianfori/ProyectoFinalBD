@@ -1,26 +1,22 @@
-<div class="votos-observados-container">
-  <h2>Votantes Observados Pendientes</h2>
+<div class="contenedor">
+  <h2>Buscar votante</h2>
 
-  <!-- 🔍 Buscador -->
-  <div class="buscador">
-    <input type="text" [(ngModel)]="filtroCedula" placeholder="Buscar por cédula">
-    <span class="lupa">🔍</span>
+  <input [(ngModel)]="cedula" placeholder="Ingrese cédula" />
+  <button (click)="buscarVotante()">Buscar</button>
+
+  <div *ngIf="mensajeError" class="error">{{ mensajeError }}</div>
+  <div *ngIf="mensajeExito" class="exito">{{ mensajeExito }}</div>
+
+  <div *ngIf="votante" class="datos-votante">
+    <h3>Datos del votante</h3>
+    <p><strong>Nombre:</strong> {{ votante.usuario.Nombre }}</p>
+    <p><strong>Apellido:</strong> {{ votante.usuario.Apellido }}</p>
+    <p><strong>Fecha de nacimiento:</strong> {{ votante.usuario.Fecha_Nacimiento | date:'yyyy-MM-dd' }}</p>
+    <p><strong>Número:</strong> {{ votante.usuario.Numero }}</p>
+    <p><strong>Serie:</strong> {{ votante.usuario.Serie }}</p>
+    <p><strong>Ya votó:</strong> {{ votante.usuario.Ya_Voto ? 'Sí' : 'No' }}</p>
+    <p><strong>Circuito:</strong> {{ votante.usuario.Numero_Circuito }}</p>
+
+    <button (click)="observarVoto()">Observar voto</button>
   </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Cédula</th>
-        <th>Aprobar</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let votante of votantesFiltrados">
-        <td>{{ votante.cedula }}</td>
-        <td>
-          <input type="checkbox" (change)="aprobarVotante(votante.id)">
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>
