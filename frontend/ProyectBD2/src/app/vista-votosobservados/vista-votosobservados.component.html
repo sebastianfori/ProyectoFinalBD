@@ -1,8 +1,10 @@
-<div class="contenedor">
+<div class="votosobservados-container">
   <h2>Buscar votante</h2>
 
-  <input [(ngModel)]="cedula" placeholder="Ingrese cédula" />
-  <button (click)="buscarVotante()">Buscar</button>
+  <div class="busqueda">
+    <input [(ngModel)]="cedula" placeholder="Ingrese cédula" />
+    <button (click)="buscarVotante()">Buscar</button>
+  </div>
 
   <div *ngIf="mensajeError" class="error">{{ mensajeError }}</div>
   <div *ngIf="mensajeExito" class="exito">{{ mensajeExito }}</div>
