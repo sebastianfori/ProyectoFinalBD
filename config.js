@@ -31,7 +31,7 @@ window.DATE_APP_CONFIG = {
     {
       date: "2026-06-22",
       title: "Lunes chill con clase",
-      note: "Tengo clase, pero puedo quedarme hasta las 19 o 20, y si hace falta tambien puedo faltar porque la cita tiene prioridad sospechosa.",
+      note: "Tengo clase, pero puedo quedarme hasta las 19 o 20, y si hace falta tambien puedo faltar por mi bb bella.",
       timesUy: ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"],
     },
     {
@@ -39,6 +39,12 @@ window.DATE_APP_CONFIG = {
       title: "Martes con clase pero disponible",
       note: "Tengo clase y no puedo faltar, asi que estoy disponible desde las 10 am hasta las 18 de Uruguay.",
       timesUy: ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
+    },
+    {
+      date: "2026-06-26",
+      title: "Viernes libre recargado",
+      note: "Tambien puedo tener este viernes completo disponible, basicamente una alfombra roja horaria para que mi bb bella elija.",
+      timesUy: ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
     },
   ],
 
