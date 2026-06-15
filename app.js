@@ -174,7 +174,7 @@
 
   function buildMessage() {
     const dateText = formatDate(state.date.date);
-    return `Mi amor precioso, gracias por hacer esta cita y estas perdonado por la demora. Quiero el ${dateText} a las ${state.time.uyTime} de Uruguay (${state.time.germanyTime} en Alemania), comer ${state.food} y mirar ${state.watch} juntos. Te quiero un monton.`;
+    return `Mi amor precioso, mi bb bella, gracias por hacer esta cita y estas perdonado por la demora. Quiero el ${dateText} a las ${state.time.uyTime} de Uruguay (${state.time.germanyTime} en Alemania), comer ${state.food} y mirar ${state.watch} juntos. Te quiero un monton.`;
   }
 
   function finish() {
