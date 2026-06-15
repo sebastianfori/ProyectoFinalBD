@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ff8fbd" />
+    <title>Ari, tenemos una cita?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero step-panel is-active" id="step-invite" aria-labelledby="invite-title">
+        <div class="floating-hearts" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="hero-copy">
+          <p class="eyebrow">mensaje ultra importante</p>
+          <h1 id="invite-title">Ari, queres tener una cita conmigo?</h1>
+          <p>
+            Prometo puntualidad emocional, comida rica, charla linda y una pelicula o serie elegida
+            democraticamente por la persona mas hermosa de Alemania.
+          </p>
+        </div>
+
+        <div class="invite-actions" id="invite-actions">
+          <button class="primary-button" id="yes-button" type="button">Si, obvio</button>
+          <button class="runaway-button" id="no-button" type="button" aria-label="No">
+            No
+          </button>
+        </div>
+      </section>
+
+      <section class="step-panel" id="step-date" aria-labelledby="date-title">
+        <div class="panel-heading">
+          <p class="eyebrow">paso 1</p>
+          <h2 id="date-title">Elegir el dia perfecto</h2>
+          <p>Primero elegi la fecha. Despues aparecen los horarios disponibles para ese dia.</p>
+        </div>
+        <div class="date-grid" id="date-grid" role="list"></div>
+      </section>
+
+      <section class="step-panel" id="step-time" aria-labelledby="time-title">
+        <div class="panel-heading">
+          <p class="eyebrow">paso 2</p>
+          <h2 id="time-title">Elegir la hora</h2>
+          <p id="selected-date-note"></p>
+        </div>
+        <div class="time-zone-note">
+          <strong>Horario pensado desde Uruguay.</strong>
+          <span>Tambien te muestro que hora es para Ari en Alemania, asi nadie cena desayuno por accidente.</span>
+        </div>
+        <div class="time-grid" id="time-grid" role="list"></div>
+        <button class="ghost-button" type="button" data-back="step-date">Cambiar fecha</button>
+      </section>
+
+      <section class="step-panel" id="step-food" aria-labelledby="food-title">
+        <div class="panel-heading">
+          <p class="eyebrow">paso 3</p>
+          <h2 id="food-title">Comida y plan</h2>
+          <p>Ahora viene la parte cientifica: elegir comida y que mirar juntos.</p>
+        </div>
+
+        <div class="choice-block">
+          <h3>Que queres comer?</h3>
+          <div class="pill-grid" id="food-grid"></div>
+        </div>
+
+        <div class="choice-block">
+          <h3>Que miramos?</h3>
+          <div class="pill-grid" id="watch-grid"></div>
+        </div>
+
+        <div class="button-row">
+          <button class="ghost-button" type="button" data-back="step-time">Cambiar hora</button>
+          <button class="primary-button" id="finish-button" type="button" disabled>Preparar mensaje</button>
+        </div>
+      </section>
+
+      <section class="step-panel" id="step-result" aria-labelledby="result-title">
+        <div class="panel-heading">
+          <p class="eyebrow">confirmado</p>
+          <h2 id="result-title">Listo, cita agendada con nivel de ternura peligroso</h2>
+          <p>Este texto queda listo para mandar por WhatsApp o por mail.</p>
+        </div>
+
+        <label class="message-label" for="final-message">Mensaje final</label>
+        <textarea id="final-message" readonly></textarea>
+
+        <div class="button-row">
+          <button class="primary-button" id="copy-button" type="button">Copiar para WhatsApp</button>
+          <a class="mail-button" id="mail-link" href="#">Enviar por mail</a>
+        </div>
+
+        <p class="tiny-note" id="copy-feedback" role="status" aria-live="polite"></p>
+        <button class="ghost-button" type="button" data-back="step-date">Elegir otra cita</button>
+      </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
